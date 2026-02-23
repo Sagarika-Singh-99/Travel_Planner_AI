@@ -53,65 +53,51 @@ Most people think this is just "ChatGPT with a travel prompt." Here's why it's m
 | **Structured output format** | ✅ Always — Weather, Budget, Days, Tips cards | ❌ Varies every time | 
 | **PDF download** | ✅ Built in | ❌ Not available | 
 
-> **In short:** ChatGPT and Perplexity generate travel plans from memory or search. This app **researches your trip in real time** using live tools, then writes a structured itinerary — more like a travel agent than a chatbot.
+**In short:** ChatGPT and Perplexity generate travel plans from memory or search. This app **researches your trip in real time** using live tools, then writes a structured itinerary — more like a travel agent than a chatbot.
 
 
 ---
 
 ## 🔄 How It Works — Step by Step
 
-This app connects 3 separate services together. Here's exactly what happens from 
-the moment you hit **Plan My Trip** to the itinerary appearing on your screen.
+This app connects 3 separate services together. Here's exactly what happens from the moment you hit **Plan My Trip** to the itinerary appearing on your screen.
 
 ---
 
-### Step 1 — You Fill the Form
-You open the app, type a destination, pick the number of days and a travel vibe, 
-and hit submit. The browser packages your inputs into a small JSON object:
+- Step 1 - You Fill the Form: You open the app, type a destination, pick the number of days, and a travel vibe, 
+and hit submit. The browser packages your inputs into a small JSON object.
 
 ```json
 { "destination": "Tokyo", "days": 5, "vibe": "adventure" }
 ```
 
-**File involved:** `ai-travel-planner` → `src/components/TripForm.tsx`
+File involved: `ai-travel-planner` → `src/components/TripForm.tsx`
 
----
-
-### Step 2 — React Sends the Request
-`TripForm.tsx` sends a `POST` request to the Node middleware.
-React never talks to the AI backend directly — the middleware sits in between
+- Step 2 — React Sends the Request: `TripForm.tsx` sends a `POST` request to the Node middleware. React never talks to the AI backend directly — the middleware sits in between
 to keep backend URLs and API keys hidden from the browser.
 
 ```
 Browser → POST /api/plan-trip → Node Middleware
 ```
 
-**File involved:** `ai-travel-planner` → `src/components/TripForm.tsx`
+File involved: `ai-travel-planner` → `src/components/TripForm.tsx`
 
----
 
-### Step 3 — Middleware Forwards to FastAPI
-The Express server receives the request, validates the fields are present,
+- Step 3 — Middleware Forwards to FastAPI: The Express server receives the request, validates that the fields are present,
 logs the trip details, and forwards the exact same JSON body to the FastAPI backend.
 
 ```
 Node Middleware (index.ts) → POST → FastAPI (main.py)
 ```
 
-**File involved:** `ai-travel-middleware` → `src/index.ts`
+File involved: `ai-travel-middleware` → `src/index.ts`
 
----
-
-### Step 4 — FastAPI Validates and Calls the Agent
-FastAPI uses a Pydantic model (`TripRequest`) to validate the incoming data,
+- Step 4 — FastAPI Validates and Calls the Agent: FastAPI uses a Pydantic model (`TripRequest`) to validate the incoming data,
 then calls `stream_agent()` from `agent.py` with the destination, days, and vibe.
 
-**File involved:** `ai-travel-backend` → `main.py`
+File involved: `ai-travel-backend` → `main.py`
 
----
-
-### Step 5 — The LangGraph ReAct Agent Runs
-This is the AI brain of the app. `agent.py` builds a structured prompt from your
+- Step 5 — The LangGraph ReAct Agent Runs: This is the AI brain of the app. `agent.py` builds a structured prompt from your
 inputs, then the LangGraph ReAct agent starts its **Think → Act → Observe → Respond** loop:
 
 | Step | What happens |
@@ -121,11 +107,9 @@ inputs, then the LangGraph ReAct agent starts its **Think → Act → Observe �
 | 👀 **Observe** | Agent reads all tool results back into its context |
 | ✍️ **Respond** | Agent sends the full context to GPT-4o-mini to write the itinerary |
 
-**Files involved:** `ai-travel-backend` → `agent.py`, `weather_tool.py`, `budget_tool.py`
+Files involved: `ai-travel-backend` → `agent.py`, `weather_tool.py`, `budget_tool.py`
 
----
-
-### Step 6 — The 3 Tools Gather Real Data
+- Step 6 — The 3 Tools Gather Real Data:
 
 | Tool | File | What it fetches |
 |------|------|----------------|
@@ -135,11 +119,9 @@ inputs, then the LangGraph ReAct agent starts its **Think → Act → Observe �
 
 All 3 results are passed back to the agent before a single word of the itinerary is written.
 
-**Files involved:** `ai-travel-backend` → `weather_tool.py`, `budget_tool.py`
+Files involved: `ai-travel-backend` → `weather_tool.py`, `budget_tool.py`
 
----
-
-### Step 7 — GPT-4o-mini Writes and Streams the Itinerary
+- Step 7 — GPT-4o-mini Writes and Streams the Itinerary:
 The agent sends the prompt + all tool results to **OpenAI's GPT-4o-mini**.
 The model generates the itinerary and streams each **token (word fragment)** 
 back the moment it's produced — no waiting for the full response to finish.
@@ -151,8 +133,8 @@ GPT-4o-mini → token → agent.py → main.py → index.ts → TripForm.tsx →
 React appends each token to the screen as it arrives — this is why the itinerary
 types itself out live, just like ChatGPT.
 
-**Files involved:** `ai-travel-backend` → `agent.py` → `main.py`  
-**Protocol used:** SSE (Server-Sent Events)
+Files involved: `ai-travel-backend` → `agent.py` → `main.py`  
+Protocol used: SSE (Server-Sent Events)
 
 ---
 
