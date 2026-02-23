@@ -19,7 +19,7 @@ The AI doesn't just generate text — it actively:
 - **Searches the web** for up-to-date attractions, restaurants, and travel tips
 - Streams the entire response **token by token** in real time, just like ChatGPT
 
-![EDF79627-633B-4368-B143-B4EE760908E4_1_102_o](https://github.com/user-attachments/assets/240737e8-4dd1-40ab-ab72-a1e653a9571c)
+
 
 ---
 
