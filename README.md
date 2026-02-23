@@ -39,6 +39,25 @@ The AI doesn't just generate text — it actively:
 - 🔗 **Share App** — copy the app link to share with friends
 
 ---
+## ⚖️ How Is This Different from ChatGPT or Perplexity?
+
+Most people think this is just "ChatGPT with a travel prompt." Here's why it's meaningfully different:
+
+| Feature | 🧠 This App | 💬 ChatGPT | 🔍 Perplexity |
+|---------|------------|-----------|--------------|
+| **Purpose** | Built specifically for travel planning | General-purpose AI assistant | General-purpose AI search |
+| **Real-time web search** | ✅ Always — via Tavily API | ⚠️ Only in paid plans | ✅ Yes |
+| **Live weather data** | ✅ Fetched via dedicated weather tool | ❌ Guesses or redirects you | ❌ Not integrated |
+| **Budget estimation** | ✅ Calculated based on destination + vibe | ❌ Generic estimates from training data | ❌ Not integrated |
+| **Uses AI agent with tools** | ✅ LangGraph ReAct agent actively calls tools | ❌ Single prompt, no tool loop | ⚠️ Search only, no agent loop |
+| **Structured output format** | ✅ Always — Weather, Budget, Days, Tips cards | ❌ Varies every time | ❌ Varies every time |
+| **PDF download** | ✅ Built in | ❌ Not available | ❌ Not available |
+
+> **In short:** ChatGPT and Perplexity generate travel plans from memory or search.  
+> This app **researches your trip in real time** using live tools, then writes a structured itinerary — more like a travel agent than a chatbot.
+
+
+---
 
 ## 🔄 How It Works — Step by Step
 
