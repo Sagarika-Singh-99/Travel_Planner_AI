@@ -166,8 +166,6 @@ Protocol used: SSE (Server-Sent Events)
 
 Each of the 3 services is deployed independently. Here's how each one runs in production.
 
----
-
 ### ⚛️ Frontend — Vercel
 
 The React app is deployed on **Vercel**, which is optimised for frontend frameworks like React and Vite.
@@ -181,7 +179,6 @@ The React app is deployed on **Vercel**, which is optimised for frontend framewo
 
 No Docker needed here — Vercel handles the build environment automatically.
 
----
 
 ### 🔀 Middleware & ⚡ Backend — Render
 
